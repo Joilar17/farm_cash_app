@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_dimensions.dart';
+import '../../../core/theme/app_theme.dart';
 import '../widgets/cash_type_tabs.dart';
 import '../widgets/item_data_row.dart';
+import '../widgets/numeric_keypad.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,71 +14,65 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _activeTab = 0; // 0: Pemasukkan, 1: Pengeluaran
+  int _activeTab = 0;
+
+  void _showNumericKeypad() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const NumericKeypad(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F9FA),
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.black87),
+          icon: const Icon(Icons.menu),
           onPressed: () {},
         ),
-        title: const Text(
-          'Beranda',
-          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
+        title: const Text('Beranda'),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 16.0),
+            padding: const EdgeInsets.only(right: AppDimensions.paddingLarge),
             child: Image.network(
               'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_Indonesia.svg/320px-Flag_of_Indonesia.svg.png',
-              width: 30,
-              height: 20,
+              width: AppDimensions.flagWidth,
+              height: AppDimensions.flagHeight,
               fit: BoxFit.cover,
             ),
           ),
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(AppDimensions.paddingLarge),
         child: Column(
           children: [
-            // Tab Selector Pemasukkan / Pengeluaran
             CashTypeTabs(
               selectedIndex: _activeTab,
-              onTabChanged: (index) {
-                setState(() {
-                  _activeTab = index;
-                });
-              },
+              onTabChanged: (index) => setState(() => _activeTab = index),
             ),
-            const SizedBox(height: 16),
-
-            // Date Picker Pickers & Submit Button Box
+            const SizedBox(height: AppDimensions.paddingLarge),
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(AppDimensions.paddingMedium),
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(AppDimensions.radiusMedium),
               ),
               child: Row(
                 children: [
-                  Expanded(child: _buildDatePickerButton('Value')),
-                  const SizedBox(width: 8),
-                  Expanded(child: _buildDatePickerButton('Value')),
-                  const SizedBox(width: 8),
+                  Expanded(child: TextField(decoration: AppTheme.pickerInputDecoration('Value'), readOnly: true)),
+                  const SizedBox(width: AppDimensions.paddingSmall),
+                  Expanded(child: TextField(decoration: AppTheme.pickerInputDecoration('Value'), readOnly: true)),
+                  const SizedBox(width: AppDimensions.paddingSmall),
                   ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF76C4BB),
-                      foregroundColor: Colors.white,
+                      backgroundColor: AppColors.primaryTeal,
+                      foregroundColor: AppColors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(AppDimensions.radiusSmall),
                       ),
                     ),
                     child: const Text('Submit'),
@@ -82,53 +80,24 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
-
-            // Transaction List Stream Builder / List View
+            const SizedBox(height: AppDimensions.paddingXLarge),
             Expanded(
               child: ListView(
                 children: [
-                  ItemDataRow(
-                    title: 'Pupuk',
-                    amount: 'Rp. 100.000',
-                    isIncome: _activeTab == 0,
-                  ),
-                  const SizedBox(height: 12),
-                  ItemDataRow(
-                    title: 'Bensin',
-                    amount: 'Rp. 150.000',
-                    isIncome: _activeTab == 0,
-                  ),
-                  const SizedBox(height: 24),
-                  
-                  // Centralized Add Button Interface
+                  ItemDataRow(title: 'Pupuk', amount: 'Rp. 100.000', isIncome: _activeTab == 0),
+                  const SizedBox(height: AppDimensions.paddingMedium),
+                  ItemDataRow(title: 'Bensin', amount: 'Rp. 150.000', isIncome: _activeTab == 0),
+                  const SizedBox(height: AppDimensions.paddingXLarge),
                   IconButton(
-                    iconSize: 48,
-                    icon: const Icon(Icons.add_circle_outline, color: Color(0xFFB2DFDB)),
-                    onPressed: () {},
+                    iconSize: AppDimensions.iconXLarge,
+                    icon: const Icon(Icons.add_circle_outline, color: AppColors.softCircleMint),
+                    onPressed: _showNumericKeypad,
                   ),
                 ],
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildDatePickerButton(String label) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.between,
-        children: [
-          Text(label, style: const TextStyle(color: Colors.black54)),
-          const Icon(Icons.calendar_today_outlined, size: 16, color: Colors.black45),
-        ],
       ),
     );
   }
