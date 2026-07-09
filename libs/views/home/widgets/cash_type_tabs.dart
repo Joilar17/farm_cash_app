@@ -21,15 +21,18 @@ class CashTypeTabs extends StatelessWidget {
       ),
       child: Row(
         children: [
-          _buildTab(0, 'Pemasukkan'),
-          _buildTab(1, 'Pengeluaran'),
+          // 1. Pass the 'context' parameter down into the helper method here
+          _buildTab(context, 0, 'Pemasukkan'),
+          _buildTab(context, 1, 'Pengeluaran'),
         ],
       ),
     );
   }
 
-  Widget _buildTab(int index, String label) {
+  // 2. Accept the BuildContext inside your helper method signatures
+  Widget _buildTab(BuildContext context, int index, String label) {
     final isSelected = selectedIndex == index;
+    
     return Expanded(
       child: GestureDetector(
         onTap: () => onTabChanged(index),
@@ -42,10 +45,11 @@ class CashTypeTabs extends StatelessWidget {
           child: Text(
             label,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: isSelected ? AppColors.textDark : AppColors.textMuted,
-            ),
+            // 3. This is where you swap out the raw TextStyle setup!
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: isSelected ? AppColors.textDark : AppColors.textMuted,
+                ),
           ),
         ),
       ),

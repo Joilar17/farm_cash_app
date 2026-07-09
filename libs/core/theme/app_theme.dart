@@ -8,6 +8,12 @@ class AppTheme {
     return ThemeData(
       scaffoldBackgroundColor: AppColors.background,
       useMaterial3: true,
+      fontFamily: 'Roboto',
+      textTheme: TextTheme(
+        bodyLarge: TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal),
+        bodyMedium: TextStyle(fontSize: 14.0, color: AppColors.textDark),
+        titleLarge: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+      ),
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.white,
         elevation: 0,

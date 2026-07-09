@@ -26,12 +26,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Safely pulling the theme context for dynamic use
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.menu),
           onPressed: () {},
         ),
+        // 1. The AppBar title automatically consumes theme.appBarTheme.titleTextStyle (Roboto)
         title: const Text('Beranda'),
         actions: [
           Padding(
@@ -62,9 +66,21 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: Row(
                 children: [
-                  Expanded(child: TextField(decoration: AppTheme.pickerInputDecoration('Value'), readOnly: true)),
+                  Expanded(
+                    child: TextField(
+                      decoration: AppTheme.pickerInputDecoration('Value'), 
+                      readOnly: true,
+                      style: theme.textTheme.bodyMedium, // 2. Forces input text to use Roboto
+                    ),
+                  ),
                   const SizedBox(width: AppDimensions.paddingSmall),
-                  Expanded(child: TextField(decoration: AppTheme.pickerInputDecoration('Value'), readOnly: true)),
+                  Expanded(
+                    child: TextField(
+                      decoration: AppTheme.pickerInputDecoration('Value'), 
+                      readOnly: true,
+                      style: theme.textTheme.bodyMedium, // 3. Forces input text to use Roboto
+                    ),
+                  ),
                   const SizedBox(width: AppDimensions.paddingSmall),
                   ElevatedButton(
                     onPressed: () {},
@@ -75,7 +91,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(AppDimensions.radiusSmall),
                       ),
                     ),
-                    child: const Text('Submit'),
+                    child: Text(
+                      'Submit',
+                      // 4. Merging weight onto bodyMedium while retaining the Roboto font family
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.white,
+                      ),
+                    ),
                   ),
                 ],
               ),
