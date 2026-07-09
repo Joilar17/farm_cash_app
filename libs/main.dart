@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
+import 'providers/family_auth_provider.dart';
+import 'providers/home_book_provider.dart';
+import 'providers/transaction_provider.dart';
+import 'providers/analytics_provider.dart';
 import 'views/main_navigation.dart';
 
 void main() {
-  // Ensures Flutter framework services are fully initialized before the app runs
   WidgetsFlutterBinding.ensureInitialized();
-  
   runApp(const MyApp());
 }
 
@@ -14,17 +17,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'My Farm Cash App',
-      
-      // Turns off the debug banner in the top-right corner for a clean look
-      debugShowCheckedModeBanner: false,
-      
-      // Injects your centralized professional design system globally
-      theme: AppTheme.lightTheme,
-      
-      // Launches the tab navigation controller as the default starting screen
-      home: const MainNavigationScreen(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => FamilyAuthProvider()..initializeAnonymousSession()),
+        ChangeNotifierProvider(create: (_) => HomeBookProvider()),
+        ChangeNotifierProvider(create: (_) => TransactionProvider()),
+        ChangeNotifierProvider(create: (_) => AnalyticsProvider()),
+      ],
+      child: MaterialApp(
+        title: 'My Farm Cash App',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        home: const MainNavigationScreen(),
+      ),
     );
   }
 }
